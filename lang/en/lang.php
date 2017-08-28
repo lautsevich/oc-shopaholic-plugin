@@ -1,116 +1,95 @@
 <?php return [
-    'plugin' => [
-        'name'          => 'Shopaholic',
-        'description'   => 'Catalog',
+    'plugin'     => [
+        'name'        => 'Shopaholic',
+        'description' => 'Catalog',
     ],
-    'field' => [
-
-        //Common fields
-        'vendor_code'                       => 'Vendor code',
-
-        //Offer fields
-        'price'                             => 'Price',
-        'old_price'                         => 'Old price',
-        'quantity'                          => 'Quantity',
-
-        //Product fields
-        'brand'                             => 'Brand',
-        'offers'                            => 'Offers',
-
-        //Settings fields
-        'decimals'                          => 'The number of digits after the decimal point',
-        'dec_point'                         => 'Decimal separator',
-        'thousands_sep'                     => 'Thousands separator',
-        'dot'                               => 'Point',
-        'comma'                             => 'Comma',
-        'together'                          => 'Together',
-        'space'                             => 'Space',
-        'double_space'                      => 'Dual space',
-        'hyphen'                            => 'Hyphen',
-        'currency'                          => 'Currency',
-        'category_preview_limit_max'        => 'The limit on the length of a brief description of the category (max)',
-        'product_preview_limit_max'         => 'The limit on the length of the short product description (max)',
-        'offer_preview_limit_max'           => 'The limit on the length of a brief description of the commodity offer (max)',
-        'check_offer_active'                => 'При получении списка активных товаров проверять наличие активных предложений',
+    'field'      => [
+        'vendor_code'        => 'Vendor code',
+        'price'              => 'Price',
+        'old_price'          => 'Old price',
+        'quantity'           => 'Quantity',
+        'brand'              => 'Brand',
+        'offer'              => 'Offers',
+        'decimals'           => 'Число знаков после запятой',
+        'dec_point'          => 'Разделитель дробной части',
+        'thousands_sep'      => 'Разделитель тысяч',
+        'dot'                => 'Точка',
+        'comma'              => 'Запятая',
+        'together'           => 'Слитно',
+        'space'              => 'Пробел',
+        'currency'           => 'Currency',
+        'check_offer_active' => 'При получении списка активных товаров проверять наличие активных предложений',
     ],
-    'menu' => [
-        'main'                  => 'Catalog',
-        'categories'            => 'Categories',
-        'product'               => 'Products',
-        'offers_archive'        => 'Deleted proposals',
-        'brands'                => 'Brands',
+    'menu'       => [
+        'main'       => 'Catalog',
+        'categories' => 'Categories',
+        'product'    => 'Products',
+        'brands'     => 'Brands',
     ],
-    'tab' => [
-        'offers'                => 'Product listings',
-        'field_view'            => 'Displaying fields',
-        'prices_format'         => 'Price format',
-        'permissions'           => 'Shopaholic',
+    'tab'        => [
+        'offer'         => 'Offers',
+        'prices_format' => 'Формат цен',
+        'permissions'   => 'Shopaholic',
     ],
-    'message' => [
-        'not_active_product'        => 'You cannot make this product an active, if you have no active product proposals',
+    'category'   => [
+        'name'       => 'category',
+        'list_title' => 'Category list',
     ],
-    'category' => [
-        'name'                      => 'categories',
-        'list_title'                => 'Category List',
+    'brand'      => [
+        'name'       => 'brand',
+        'list_title' => 'Brand list',
     ],
-    'brand' => [
-        'name'                      => 'brand',
-        'list_title'                => 'List of brands',
+    'product'    => [
+        'name'       => 'product',
+        'list_title' => 'Product list',
     ],
-    'product' => [
-        'name'                      => 'products',
-        'list_title'                => 'Product List',
+    'offer'      => [
+        'name'       => 'offer',
+        'list_title' => 'Offer list',
     ],
-    'offer' => [
-        'name'                      => 'offers',
-        'list_title'                => 'List of proposals',
-    ],
-    'component' => [
+    'component'  => [
 
         //Product components
-        'product_page_name'                 => 'Product page',
-        'product_page_description'          => 'Retrieving data for product page',
-        'product_data_name'                 => 'Product data',
-        'product_data_description'          => 'Data acquisition product',
-        'product_list_name'                 => 'Product List',
-        'product_list_description'          => 'Receiving the list of the goods',
+        'product_page_name'         => 'Product page',
+        'product_page_description'  => 'Get data for product page',
+        'product_data_name'         => 'Product data',
+        'product_data_description'  => 'Get product data by ID',
+        'product_list_name'         => 'Product list',
+        'product_list_description'  => 'Get sorting product list',
+
+        //Brand components
+        'brand_page_name'           => 'Страница бренда',
+        'brand_page_description'    => 'Получение данных для страницы бренда',
+        'brand_data_name'           => 'Данные бренда',
+        'brand_data_description'    => 'Получение данных бренда',
+        'brand_list_name'           => 'Список брендов',
+        'brand_list_description'    => 'Получение списка брендов',
 
         //Category components
-        'category_page_name'                => 'Pages/Categories',
-        'category_page_description'         => 'Data output on category page',
-        'category_data_name'                => 'Data category',
-        'category_data_description'         => 'Retrieving data categories',
-        'category_list_name'                => 'Category List',
-        'category_list_description'         => 'Getting the catalog',
+        'category_page_name'        => 'Category page',
+        'category_page_description' => 'Get data for category page',
+        'category_data_name'        => 'Category data',
+        'category_data_description' => 'Get category data by ID',
+        'category_list_name'        => 'Category list',
+        'category_list_description' => 'Get category tree',
 
         //Common components
-        'breadcrumbs_name'                  => 'Bread crumbs',
-        'breadcrumbs_description'           => 'Retrieving data for the formation of crumbs directory',
-        'currency_name'                     => 'Currency',
-        'currency_description'              => 'Getting the value of the currency',
+        'breadcrumbs_name'          => 'Breadcrumbs',
+        'breadcrumbs_description'   => 'Get data for catalog breadcrumbs',
+        'currency_name'             => 'Currency',
+        'currency_description'      => 'Get default currency value',
 
         //Components settings
-        'product_list_sorting'               => 'Default sorting',
-        'sorting_no'                        => 'Without sorting',
-        'sorting_price_desc'                => 'Dear',
-        'sorting_price_asc'                 => 'Cheap',
-        'sorting_new'                       => 'New',
-        'sorting_popularity_desc'           => 'More popular',
-    ],
-    'settings' => [
-        'view_off'              => 'Hide fields',
-        'brand'                 => 'Hide fields for brands',
-        'category'              => 'Hide fields for categories',
-        'product'               => 'Hide fields for products',
-        'offer'                 => 'Hide fields for offers',
+        'product_list_sorting'      => 'Default sorting',
+        'sorting_no'                => 'Without sorting',
+        'sorting_price_desc'        => 'Дорогие',
+        'sorting_price_asc'         => 'Дешевые',
+        'sorting_new'               => 'New',
+        'sorting_popularity_desc'   => 'More popular',
     ],
     'permission' => [
-        'category'              => 'Manage categories',
-        'brand'                 => 'Manage brands',
-        'product'               => 'Manage products',
-        'offers'                => 'Remote management proposals',
-    ],
-    'buttons' => [
-        'restore_selected'      => 'Restore',
+        'category' => 'Manage categories',
+        'brand'    => 'Manage brands',
+        'product'  => 'Manage products',
     ],
 ];

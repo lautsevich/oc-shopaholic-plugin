@@ -1,10 +1,7 @@
 <?php namespace Lovata\Shopaholic\Components;
 
 use Cms\Classes\ComponentBase;
-use Kharanenka\Helper\CCache;
-use Lovata\Shopaholic\Models\Category;
-use October\Rain\Database\Collection;
-use Lovata\Shopaholic\Plugin;
+use Lovata\Shopaholic\Classes\Collection\CategoryCollection;
 
 /**
  * Class CategoryList
@@ -13,7 +10,6 @@ use Lovata\Shopaholic\Plugin;
  */
 class CategoryList extends ComponentBase
 {
-
     /**
      * @return array
      */
@@ -26,41 +22,13 @@ class CategoryList extends ComponentBase
     }
 
     /**
-     * Get category tree
-     * @return array
+     * Make element collection
+     * @param array $arElementIDList
+     *
+     * @return CategoryCollection
      */
-    public function get()
+    public function make($arElementIDList = null)
     {
-        //Get cache data
-        $arCacheTags = [Plugin::CACHE_TAG, Category::CACHE_TAG_LIST];
-        $sCacheKey = Category::CACHE_TAG_LIST;
-
-        $arCategoryListID = CCache::get($arCacheTags, $sCacheKey);
-        if(empty($arCategoryListID)) {
-
-            /** @var Collection|Category[] $arCategories */
-            $arCategories = Category::active()->orderBy('nest_left', 'asc')->get()->toNested();
-            if($arCategories->isEmpty()) {
-                return [];
-            }
-
-            foreach($arCategories as $obCategory) {
-                $arCategoryListID[] = $obCategory->id;
-            }
-
-            //Set cache data
-            CCache::forever($arCacheTags, $sCacheKey, $arCategoryListID);
-        }
-
-        if(empty($arCategoryListID)) {
-            return [];
-        }
-
-        $arResult = [];
-        foreach($arCategoryListID as $iCategoryID) {
-            $arResult[$iCategoryID] = Category::getCacheData($iCategoryID);
-        }
-
-        return $arResult;
+        return CategoryCollection::make($arElementIDList);
     }
 }

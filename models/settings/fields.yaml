@@ -1,20 +1,10 @@
 tabs:
     fields:
-        category_preview_limit_max:
+        check_offer_active:
             tab: lovata.toolbox::lang.tab.settings
             span: left
-            label: lovata.shopaholic::lang.field.category_preview_limit_max
-            type: number
-        product_preview_limit_max:
-            tab: lovata.toolbox::lang.tab.settings
-            span: left
-            label: lovata.shopaholic::lang.field.product_preview_limit_max
-            type: number
-        offer_preview_limit_max:
-            tab: lovata.toolbox::lang.tab.settings
-            span: left
-            label: lovata.shopaholic::lang.field.offer_preview_limit_max
-            type: number
+            label: lovata.shopaholic::lang.field.check_offer_active
+            type: checkbox
         decimals:
             tab: lovata.shopaholic::lang.tab.prices_format
             span: left
@@ -35,8 +25,6 @@ tabs:
             options:
                 together: lovata.shopaholic::lang.field.together
                 space: lovata.shopaholic::lang.field.space
-                double_space: lovata.shopaholic::lang.field.double_space
-                hyphen: lovata.shopaholic::lang.field.hyphen
         currency:
             tab: lovata.shopaholic::lang.tab.prices_format
             span: left

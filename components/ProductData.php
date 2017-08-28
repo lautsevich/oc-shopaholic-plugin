@@ -1,18 +1,15 @@
 <?php namespace Lovata\Shopaholic\Components;
 
-use Cms\Classes\ComponentBase;
-use Lovata\Shopaholic\Models\Product;
-use Request;
+use Lovata\Shopaholic\Classes\Item\ProductItem;
+use Lovata\Toolbox\Classes\Component\ElementData;
 
 /**
  * Class ProductData
  * @package Lovata\Shopaholic\Components
  * @author Andrey Kharanenka, a.khoronenko@lovata.com, LOVATA Group
  */
-class ProductData extends ComponentBase
+class ProductData extends ElementData
 {
-    protected $iProductId;
-
     /**
      * @return array
      */
@@ -25,28 +22,12 @@ class ProductData extends ComponentBase
     }
 
     /**
-     * Ajax listener
-     * @return array|null
+     * Make new element item
+     * @param int $iElementID
+     * @return ProductItem
      */
-    public function onGetProductData()
+    protected function makeItem($iElementID)
     {
-        $this->iProductId = Request::get('product_id');
-        return Product::getCacheData($this->iProductId);
-    }
-
-    /**
-     * Get product data
-     * @param int $iProductID
-     * @return array
-     */
-    public function get($iProductID)
-    {
-        if(Request::ajax() && empty($iProductID)) {
-            $arResult = Product::getCacheData($this->iProductId);
-        } else {
-            $arResult = Product::getCacheData($iProductID);
-        }
-        
-        return $arResult;
+        return ProductItem::make($iElementID);
     }
 }

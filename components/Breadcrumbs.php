@@ -1,11 +1,10 @@
 <?php namespace Lovata\Shopaholic\Components;
 
 use Cms\Classes\ComponentBase;
-use Kharanenka\Helper\CCache;
-use Lovata\Shopaholic\Models\Category;
-use Lovata\Shopaholic\Models\Product;
-use Lovata\Shopaholic\Plugin;
 use System\Classes\PluginManager;
+
+use Lovata\Shopaholic\Classes\Item\CategoryItem;
+use Lovata\Shopaholic\Classes\Item\ProductItem;
 
 /**
  * Class Breadcrumbs
@@ -14,7 +13,7 @@ use System\Classes\PluginManager;
  */
 class Breadcrumbs extends ComponentBase
 {
-    const CACHE_TAG = 'shopaholic-breadcrumbs';
+    protected $arResult = [];
 
     /**
      * @return array
@@ -28,56 +27,50 @@ class Breadcrumbs extends ComponentBase
     }
 
     /**
-     * Get breadcrumbs by category id
+     * Get breadcrumbs for category page by category id
      * @param int $iCategoryID
-     * @param int $iTagID
      * @return array
      */
-    public function getByCategoryID($iCategoryID, $iTagID = null)
+    public function getByCategoryID($iCategoryID)
     {
         if(empty($iCategoryID)) {
             return [];
         }
-        
-        //Get cache data
-        $arCacheTags = [Plugin::CACHE_TAG, self::CACHE_TAG, Category::CACHE_TAG_ELEMENT];
-        $sCacheKey = implode('_', [$iCategoryID, $iTagID]);
-
-        $arResult = CCache::get($arCacheTags, $sCacheKey);
-        if(!empty($arResult)) {
-            return $arResult;
-        }
-
-        $arResult = [];
-        $bActiveCategory = true;
-        
-        //Get tag element
-        if(PluginManager::instance()->hasPlugin('Lovata.TagsShopaholic') && !empty($iTagID)) {
-            $arTagData = \Lovata\TagsShopaholic\Models\Tag::getCacheData($iTagID);
-            if(!empty($arTagData)) {
-                $arTagData['active'] = true;
-                $arResult[] = $arTagData;
-            }
-
-            $bActiveCategory = false;
-        }
-
-        /** @var Category $obCategory */
-        $obCategory = Category::find($iCategoryID);
-        if(empty($obCategory)) {
-            return $arResult;
-        }
 
         //Get category data
-        $this->getCategoryData($arResult, $obCategory, $bActiveCategory);
-        $arResult = array_reverse($arResult);
-
-        //Set cache data
-        CCache::forever($arCacheTags, $sCacheKey, $arResult);
+        $this->addCategoryData($iCategoryID, true);
+        $this->arResult = array_reverse($this->arResult);
         
-        return $arResult;
+        return $this->arResult;
     }
 
+    /**
+     * Get breadcrumbs for tag page by tag ID
+     * @param int $iTagID
+     * @return array
+     */
+    public function getByTagID($iTagID)
+    {
+        //Get tag element
+        if(!PluginManager::instance()->hasPlugin('Lovata.TagsShopaholic') || empty($iTagID)) {
+            return $this->arResult;
+        }
+
+        $obTagItem = \Lovata\TagsShopaholic\Classes\Item\TagItem::make($iTagID);
+        if($obTagItem->isEmpty()) {
+            return $this->arResult;
+        }
+
+        $arTagData = $obTagItem->toArray();
+        $arTagData['active'] = true;
+        $this->arResult[] = $arTagData;
+
+        //Get category data
+        $this->addCategoryData($obTagItem->category_id);
+        $this->arResult = array_reverse($this->arResult);
+
+        return $this->arResult;
+    }
 
     /**
      * Get breadcrumbs by product ID
@@ -87,77 +80,51 @@ class Breadcrumbs extends ComponentBase
     public function getByProductID($iProductID)
     {
         if(empty($iProductID)) {
-            return [];
-        }
-        
-        //Get cache data
-        $arCacheTags = [Plugin::CACHE_TAG, self::CACHE_TAG, Product::CACHE_TAG_ELEMENT];
-        $sCacheKey = $iProductID;
-
-        $arResult = CCache::get($arCacheTags, $sCacheKey);
-        if(!empty($arResult)) {
-            return $arResult;
-        }
-
-        $arResult = [];
-
-        //Get product by slug
-        /** @var Product $obProduct */
-        $obProduct = Product::with('category')->active()->find($iProductID);
-        if(empty($obProduct)) {
-            return $arResult;
+            return $this->arResult;
         }
 
         //Get product data
-        $arResult[] = [
-            'id' => $obProduct->id,
-            'name' => $obProduct->name,
-            'slug' => $obProduct->slug,
+        $obProductItem = ProductItem::make($iProductID);
+        if($obProductItem->isEmpty()) {
+            return $this->arResult;
+        }
+
+        //Add product data to list
+        $this->arResult[] = [
+            'id'     => $obProductItem->id,
+            'name'   => $obProductItem->name,
+            'slug'   => $obProductItem->slug,
             'active' => true,
         ];
 
-        //Get product category
-        $obCategory = $obProduct->category;
-
-        if(empty($obCategory)) {
-            
-            //Set cache data
-            CCache::forever($arCacheTags, $sCacheKey, $arResult);
-            return $arResult;
-        }
-
         //Get category data
-        $this->getCategoryData($arResult, $obCategory);
-        $arResult = array_reverse($arResult);
+        $this->addCategoryData($obProductItem->category_id);
+        $this->arResult = array_reverse($this->arResult);
 
-        //Set cache data
-        CCache::forever($arCacheTags, $sCacheKey, $arResult);
-
-        return $arResult;
+        return $this->arResult;
     }
 
     /**
-     * Get category data
-     * @param array $arResult
-     * @param Category $obCategory
+     * Add category data
+     * @param int $iCategoryID
      * @param bool $bActiveCategory
      */
-    protected function getCategoryData(&$arResult, $obCategory, $bActiveCategory = false)
+    protected function addCategoryData($iCategoryID, $bActiveCategory = false)
     {
-        if(empty($obCategory)) {
+        $obCategoryItem = CategoryItem::make($iCategoryID);
+        if($obCategoryItem->isEmpty()) {
             return;
         }
 
-        $arResult[] = [
-            'id' => $obCategory->id,
-            'name' => $obCategory->name,
-            'slug' => $obCategory->slug,
+        $this->arResult[] = [
+            'id'     => $obCategoryItem->id,
+            'name'   => $obCategoryItem->name,
+            'slug'   => $obCategoryItem->slug,
             'active' => $bActiveCategory,
         ];
 
-        $obParentCategory = $obCategory->parent;
-        if(!empty($obParentCategory)) {
-            $this->getCategoryData($arResult, $obParentCategory);
+        if(!empty($obCategoryItem->parent_id)) {
+            $this->addCategoryData($obCategoryItem->parent_id);
         }
     }
 }

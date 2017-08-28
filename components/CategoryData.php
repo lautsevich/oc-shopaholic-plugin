@@ -1,14 +1,15 @@
 <?php namespace Lovata\Shopaholic\Components;
 
-use Cms\Classes\ComponentBase;
-use Lovata\Shopaholic\Models\Category;
+use Lovata\Toolbox\Classes\Component\ElementData;
+
+use Lovata\Shopaholic\Classes\Item\CategoryItem;
 
 /**
  * Class CategoryData
  * @package Lovata\Shopaholic\Components
  * @author Andrey Kharanenka, a.khoronenko@lovata.com, LOVATA Group
  */
-class CategoryData extends ComponentBase
+class CategoryData extends ElementData
 {
     /**
      * @return array
@@ -22,12 +23,12 @@ class CategoryData extends ComponentBase
     }
 
     /**
-     * Get category data with children
-     * @param int $iCategoryID
-     * @return array
+     * Make new element item
+     * @param int $iElementID
+     * @return CategoryItem
      */
-    public function get($iCategoryID)
+    protected function makeItem($iElementID)
     {
-        return Category::getCacheData($iCategoryID);
+        return CategoryItem::make($iElementID);
     }
 }

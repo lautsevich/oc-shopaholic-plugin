@@ -3,9 +3,6 @@ fields:
         label: 'lovata.toolbox::lang.field.active'
         span: left
         default: 0
-        context:
-            - update
-            - preview
         type: switch
     name:
         label: 'lovata.toolbox::lang.field.name'
@@ -31,7 +28,6 @@ tabs:
             span: left
             type: relation
             tab: 'lovata.toolbox::lang.tab.settings'
-            emptyOption: 'lovata.toolbox::lang.field.empty'
         brand:
             label: 'lovata.shopaholic::lang.field.brand'
             span: left
@@ -81,11 +77,11 @@ tabs:
             span: left
             type: fileupload
             tab: 'lovata.toolbox::lang.tab.images'
-        offers:
-            label: 'lovata.shopaholic::lang.field.offers'
+        offer:
+            label: 'lovata.shopaholic::lang.field.offer'
             span: full
             context:
                 - update
                 - preview
             type: partial
-            tab: 'lovata.shopaholic::lang.tab.offers'
+            tab: 'lovata.shopaholic::lang.tab.offer'

@@ -1,22 +1,17 @@
 <?php namespace Lovata\Shopaholic\Components;
 
 use Event;
-use Lovata\Toolbox\Classes\ComponentTraitNotFoundResponse;
-use Cms\Classes\ComponentBase;
 use Lovata\Shopaholic\Models\Category;
+use Lovata\Shopaholic\Classes\Item\CategoryItem;
+use Lovata\Toolbox\Classes\Component\ElementPage;
 
 /**
  * Class CategoryPage
  * @package Lovata\Shopaholic\Components
  * @author Andrey Kharanenka, a.khoronenko@lovata.com, LOVATA Group
  */
-class CategoryPage extends ComponentBase
+class CategoryPage extends ElementPage
 {
-    use ComponentTraitNotFoundResponse;
-
-    /** @var null|Category */
-    protected $obCategory = null;
-
     /**
      * @return array
      */
@@ -29,50 +24,32 @@ class CategoryPage extends ComponentBase
     }
 
     /**
-     * @return array
+     * Get element object
+     * @param string $sElementSlug
+     * @return Category
      */
-    public function defineProperties()
+    protected function getElementObject($sElementSlug)
     {
-        $arProperties = $this->getElementPageProperties();
-        return $arProperties;
-    }
-
-    /**
-     * @return \Illuminate\Http\Response|void
-     */
-    public function onRun()
-    {
-        $bDisplayError404 = $this->property('error_404') == 'on' ? true : false;
-
-        $sCategorySlug =  $this->property('slug');
-        if(empty($sCategorySlug)) {
-            return $this->getErrorResponse($bDisplayError404);
-        }
-
-        /** @var Category $obCategory */
-        $obCategory = Category::active()->getBySlug($sCategorySlug)->first();
-        if(empty($obCategory)) {
-            return $this->getErrorResponse($bDisplayError404);
-        }
-        
-        $this->obCategory = $obCategory;
-
-        //Send event
-        Event::fire('shopaholic.category.open', [$obCategory]);
-
-        return;
-    }
-
-    /**
-     * Get Category data with children
-     * @return array
-     */
-    public function get()
-    {
-        if(empty($this->obCategory)) {
+        if(empty($sElementSlug)) {
             return null;
         }
 
-        return Category::getCacheData($this->obCategory->id, $this->obCategory);
+        $obElement = Category::active()->getBySlug($sElementSlug)->first();
+        if(!empty($obElement)) {
+            Event::fire('shopaholic.category.open', [$obElement]);
+        }
+        
+        return $obElement;
+    }
+
+    /**
+     * Make new element item
+     * @param int $iElementID
+     * @param Category $obElement
+     * @return CategoryItem
+     */
+    protected function makeItem($iElementID, $obElement)
+    {
+        return CategoryItem::make($iElementID, $obElement);
     }
 }

@@ -1,22 +1,17 @@
 <?php namespace Lovata\Shopaholic\Components;
 
 use Event;
-use Lovata\Toolbox\Classes\ComponentTraitNotFoundResponse;
 use Lovata\Shopaholic\Models\Product;
-use Cms\Classes\ComponentBase;
+use Lovata\Shopaholic\Classes\Item\ProductItem;
+use Lovata\Toolbox\Classes\Component\ElementPage;
 
 /**
  * Class ProductPage
  * @package Lovata\Shopaholic\Components
  * @author Andrey Kharanenka, a.khoronenko@lovata.com, LOVATA Group
  */
-class ProductPage extends ComponentBase
+class ProductPage extends ElementPage
 {
-    use ComponentTraitNotFoundResponse;
-
-    /** @var null|Product */
-    protected $obProduct = null;
-
     /**
      * @return array
      */
@@ -29,52 +24,32 @@ class ProductPage extends ComponentBase
     }
 
     /**
-     * @return array
+     * Get element object
+     * @param string $sElementSlug
+     * @return Product
      */
-    public function defineProperties()
+    protected function getElementObject($sElementSlug)
     {
-        $arProperties = $this->getElementPageProperties();
-        return $arProperties;
-    }
-
-    /**
-     * @return \Illuminate\Http\Response|void
-     */
-    public function onRun()
-    {
-        $bDisplayError404 = $this->property('error_404') == 'on' ? true : false;
-
-        //Get product slug
-        $sProductSlug = $this->property('slug');
-        if (empty($sProductSlug)) {
-            return $this->getErrorResponse($bDisplayError404);
-        }
-
-        //Get product by slug
-        /** @var Product $obProduct */
-        $obProduct = Product::active()->getBySlug($sProductSlug)->first();
-        if (empty($obProduct)) {
-            return $this->getErrorResponse($bDisplayError404);
-        }
-
-        $this->obProduct = $obProduct;
-
-        //Send event
-        Event::fire('shopaholic.product.open', [$obProduct]);
-
-        return;
-    }
-
-    /**
-     * Get product data
-     * @return array
-     */
-    public function get()
-    {
-        if(empty($this->obProduct)) {
+        if(empty($sElementSlug)) {
             return null;
         }
 
-        return Product::getCacheData($this->obProduct->id, $this->obProduct);
+        $obElement = Product::active()->getBySlug($sElementSlug)->first();
+        if(!empty($obElement)) {
+            Event::fire('shopaholic.product.open', [$obElement]);
+        }
+
+        return $obElement;
+    }
+
+    /**
+     * Make new element item
+     * @param int $iElementID
+     * @param Product $obElement
+     * @return ProductItem
+     */
+    protected function makeItem($iElementID, $obElement)
+    {
+        return ProductItem::make($iElementID, $obElement);
     }
 }

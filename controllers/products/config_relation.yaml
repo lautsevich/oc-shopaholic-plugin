@@ -1,5 +1,5 @@
-offers:
-    label: 'lovata.shopaholic::lang.field.offers'
+offer:
+    label: 'lovata.shopaholic::lang.offer.name'
     manage:
         form: $/lovata/shopaholic/models/offer/fields.yaml
         list: $/lovata/shopaholic/models/offer/columns.yaml
@@ -9,6 +9,21 @@ offers:
     view:
         list: $/lovata/shopaholic/models/offer/columns.yaml
         toolbarButtons: 'create|delete'
+        showSearch: true
+        showSorting: true
+        recordsPerPage: 10
+# Stickers for Shopaholic plugin
+sticker:
+    label: 'lovata.stickersshopaholic::lang.sticker.name'
+    manage:
+        form: $/lovata/stickersshopaholic/models/sticker/fields.yaml
+        list: $/lovata/stickersshopaholic/models/sticker/columns.yaml
+        showSearch: true
+        showSorting: true
+        recordsPerPage: 10
+    view:
+        list: $/lovata/stickersshopaholic/models/sticker/columns.yaml
+        toolbarButtons: 'add|remove'
         showSearch: true
         showSorting: true
         recordsPerPage: 10
