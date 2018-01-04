@@ -2,6 +2,8 @@
 
 [![Build Status](https://travis-ci.org/lovata/oc-shopaholic-plugin.svg?branch=master)](https://travis-ci.org/lovata/oc-shopaholic-plugin) [![Code Climate](https://codeclimate.com/github/lovata/oc-shopaholic-plugin/badges/gpa.svg)](https://codeclimate.com/github/lovata/oc-shopaholic-plugin) [![Crowdin](https://d322cqt584bo4o.cloudfront.net/shopaholic-plugin-for-october/localized.svg)](https://crowdin.com/project/shopaholic-plugin-for-october)
 
+![Shopaholic Banner](assets/images/shopaholic-banner.png)
+
 ## Description
 
 E-Commerce plugin by [LOVATA](https://lovata.com) for October CMS.
